@@ -9,34 +9,34 @@ function Nav() {
       <div className="nav-content">
         <ul className="list-styled">
           <li>
-            <img src={Logo} alt="Apple" />
+            <img  src={Logo} alt="Apple" />
           </li>
           <li>
-            <a className="link-styled">Store</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Store</a>
           </li>
           <li>
-            <a className="link-styled">Mac</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Mac</a>
           </li>
           <li>
-            <a className="link-styled">iPad</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>iPad</a>
           </li>
           <li>
-            <a className="link-styled">iPhone</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>iPhone</a>
           </li>
           <li>
-            <a className="link-styled">Watch</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Watch</a>
           </li>
           <li>
-            <a className="link-styled">Tv & Home</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Tv & Home</a>
           </li>
           <li>
-            <a className="link-styled">Entertainment</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Entertainment</a>
           </li>
           <li>
-            <a className="link-styled">Accessories</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Accessories</a>
           </li>
           <li>
-            <a className="link-styled">Support</a>
+            <a className="link-styled" style={{ fontSize: '18px' }}>Support</a>
           </li>
           <li>
             <img src={Search} alt="Search" />
