@@ -1,6 +1,7 @@
 import Nav from "../src/components/Nav";
 import Jumbotron from "./components/Jumbotron";
 import SoundSection from '../src/components/SoundSection';
+import DisplaySection from "../src/components/DisplaySection";
 
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
         <Nav />
         <Jumbotron />
         <SoundSection />
+        <DisplaySection />
     </div>
   );
 }
