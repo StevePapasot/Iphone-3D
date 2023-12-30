@@ -20,88 +20,110 @@ import {
 } from "webgi";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {scrollAnimation} from "../lib/scroll-animation";
+import { scrollAnimation } from "../lib/scroll-animation";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const WebgiViewer = forwardRef((props, ref) => {
+  {
+    const canvasRef = useRef(null);
+    const [viewRef, setViewerRef] = useState(null);
+    const [targetRef, setTargetRef] = useState(null);
+    const [camerRef, setCamerRef] = useState(null);
+    const [positionRef, setPositionRef] = useState(null);
 
+    useImperativeHandle(ref, ()=> ({
+      triggerPreview(){
+        gsap.to(positionRef,{
+          x: 13.04,
+          y: -2.01,
+          z: 2.29,
+          duration: 2,
+          onUpdate: () => {
+            setViewerRef.setDirty();
+            cameraRef>positionTargetUpdated(true);
+          }
+        });
 
-function WebgiViewer() {
-  const canvasRef = useRef(null);
-
-
-  const memoizedScrollingAnimation = useCallback(
-    (position, target, onUpdate) => {
-      if (position && target && onUpdate){
-        scrollAnimation(position, target, onUpdate);
+        gsap.to(targetRef, {x: 0.11, y:0.0, z:0.0, duration: 2});
       }
-    }, []
-  )
+    }));
 
 
+    useImperativeHandle(ref, () => ({
+      triggerPreview(){
 
-  const setupViewer = useCallback(async () => {
-    const viewer = new ViewerApp({
-      canvas: canvasRef.current,
-    });
-
-    const manager = await viewer.addPlugin(AssetManagerPlugin);
-
-    const camer = viewer.scene.activeCamera;
-    const position = camera.position;
-    const target = camera.target;
-
-    await viewer.addPlugin(GBufferPlugin);
-    await viewer.addPlugin(new ProgressivePlugin(32));
-    await viewer.addPlugin(new TonemapPlugin(true));
-    await viewer.addPlugin(GammaCorrectionPlugin);
-    await viewer.addPlugin(SSRPlugin);
-    await viewer.addPlugin(SSAOPlugin);
-    await viewer.addPlugin(BloomPlugin);
-
-    viewer.renderer.refreshPipeline();
-    await manager.addFromPath("scene-black.glb");
-    viewer.getPlugin(TonemapPlugin).uiConfig.clipBackground = true;
-    viewer.scene.activeCamer.setCameraOptions({ controlsEnabled: false });
-    window.scrollTo(0, 0);
-
-
-    let needsUpdate = true;
-
-    const onUpdate = () => {
-      needsUpdate = true;
-      viewer.setDirty();
-    }
-
-
-
-
-    viewer.addEventListener("preFrame", () => {
-      if(needsUpdate){
-      camera.positionTargetUpdated(true);
-      needsUpdate = false;
       }
-    });
+    }));
 
-    memoizedScrollingAnimation(position, target, onUpdate);
+    const memoizedScrollingAnimation = useCallback(
+      (position, target, onUpdate) => {
+        if (position && target && onUpdate) {
+          scrollAnimation(position, target, onUpdate);
+        }
+      },
+      []
+    );
 
-    await viewer.addPlugin(FileTransferPlugin);
+    const setupViewer = useCallback(async () => {
+      const viewer = new ViewerApp({
+        canvas: canvasRef.current,
+      });
 
-    await viewer.load("./assets/classic-watch.glb");
+      const manager = await viewer.addPlugin(AssetManagerPlugin);
 
-    window.scrollTo(0, 0);
-    viewer.addEventListener("preFrame", () => {});
-  }, []);
+      const camer = viewer.scene.activeCamera;
+      const position = camera.position;
+      const target = camera.target;
 
-  useEffect(() => {
-    setupViewer();
-  }, []);
+      await viewer.addPlugin(GBufferPlugin);
+      await viewer.addPlugin(new ProgressivePlugin(32));
+      await viewer.addPlugin(new TonemapPlugin(true));
+      await viewer.addPlugin(GammaCorrectionPlugin);
+      await viewer.addPlugin(SSRPlugin);
+      await viewer.addPlugin(SSAOPlugin);
+      await viewer.addPlugin(BloomPlugin);
 
-  return (
-    <div id="webgi-canvas-container">
-      <canvas id="webgi-canvas" ref={canvasRef} />
-    </div>
-  );
-}
+      viewer.renderer.refreshPipeline();
+      await manager.addFromPath("scene-black.glb");
+      viewer.getPlugin(TonemapPlugin).uiConfig.clipBackground = true;
+      viewer.scene.activeCamer.setCameraOptions({ controlsEnabled: false });
+      window.scrollTo(0, 0);
+
+      let needsUpdate = true;
+
+      const onUpdate = () => {
+        needsUpdate = true;
+        viewer.setDirty();
+      };
+
+      viewer.addEventListener("preFrame", () => {
+        if (needsUpdate) {
+          camera.positionTargetUpdated(true);
+          needsUpdate = false;
+        }
+      });
+
+      memoizedScrollingAnimation(position, target, onUpdate);
+
+      await viewer.addPlugin(FileTransferPlugin);
+
+      await viewer.load("./assets/classic-watch.glb");
+
+      window.scrollTo(0, 0);
+      viewer.addEventListener("preFrame", () => {});
+    }, []);
+
+    useEffect(() => {
+      setupViewer();
+    }, []);
+
+    return (
+      <div id="webgi-canvas-container">
+        <canvas id="webgi-canvas" ref={canvasRef} />
+      </div>
+    );
+  }
+});
 
 export default WebgiViewer;
